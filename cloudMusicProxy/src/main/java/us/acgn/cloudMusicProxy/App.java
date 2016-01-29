@@ -24,15 +24,15 @@ public class App {
 						Filter filter = new Filter(originalRequest);
 						return filter;
 					}
-					
-//					@Override
-//				    public int getMaximumRequestBufferSizeInBytes() {
-//				        return 102400;
-//				    }
+
+					// @Override
+					// public int getMaximumRequestBufferSizeInBytes() {
+					// return 102400;
+					// }
 					@Override
-				    public int getMaximumResponseBufferSizeInBytes() {
-				        return 102400000;
-				    }
+					public int getMaximumResponseBufferSizeInBytes() {
+						return 102400000;
+					}
 				}).start();
 
 	}
