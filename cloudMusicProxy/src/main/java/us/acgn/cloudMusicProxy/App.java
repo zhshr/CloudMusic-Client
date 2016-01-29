@@ -31,7 +31,7 @@ public class App {
 					// }
 					@Override
 					public int getMaximumResponseBufferSizeInBytes() {
-						return 102400000;
+						return 1024*1024*10;
 					}
 				}).start();
 

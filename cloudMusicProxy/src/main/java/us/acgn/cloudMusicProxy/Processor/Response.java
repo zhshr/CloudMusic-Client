@@ -2,7 +2,7 @@ package us.acgn.cloudMusicProxy.Processor;
 
 import io.netty.handler.codec.http.HttpObject;
 
-public class Response extends Processor{
+public class Response extends Processor {
 
 	@Override
 	public boolean needProcess(String uri) {

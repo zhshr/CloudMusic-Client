@@ -2,7 +2,7 @@ package us.acgn.cloudMusicProxy.Processor;
 
 import io.netty.handler.codec.http.HttpObject;
 
-public class Request extends Processor{
+public class Request extends Processor {
 
 	@Override
 	public boolean needProcess(String uri) {
@@ -16,5 +16,5 @@ public class Request extends Processor{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

@@ -27,19 +27,20 @@ public class Filter extends HttpFiltersAdapter {
 	Request req;
 	Response res;
 	boolean verbose = true;
+
 	public Filter(HttpRequest originalRequest) {
 		super(originalRequest);
 		// TODO Auto-generated constructor stub
 		req = new Request();
 		res = new Response();
-		if (originalRequest.getUri().contains(".mp3")){
+		if (originalRequest.getUri().contains(".mp3")) {
 			verbose = false;
 		}
 	}
 
 	@Override
 	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-		if (verbose){
+		if (verbose) {
 			System.out.println("clientToProxyRequest - to -> " + originalRequest.getUri());
 		}
 		return null;
@@ -47,33 +48,35 @@ public class Filter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpObject serverToProxyResponse(HttpObject httpObject) {
-		if (verbose){
-			System.out.println("serverToProxyResponse <- from - " + originalRequest.getUri() + "  " + httpObject.getClass().getName());
+		if (verbose) {
+			System.out.println("serverToProxyResponse <- from - " + originalRequest.getUri() + "  "
+					+ httpObject.getClass().getName());
 		}
 
 		return httpObject;
 	}
-	
+
 	@Override
-    public HttpObject proxyToClientResponse(HttpObject httpObject) {
-		if (verbose){
-			System.out.println("proxyToClientResponse <- from - " + originalRequest.getUri() + "  " + httpObject.getClass().getName());
+	public HttpObject proxyToClientResponse(HttpObject httpObject) {
+		if (verbose) {
+			System.out.println("proxyToClientResponse <- from - " + originalRequest.getUri() + "  "
+					+ httpObject.getClass().getName());
 		}
-        return httpObject;
-    }
-	
+		return httpObject;
+	}
+
 	@Override
-    public void serverToProxyResponseReceiving() {
-		if (verbose){
+	public void serverToProxyResponseReceiving() {
+		if (verbose) {
 			System.out.println("serverToProxyResponseReceiving");
 		}
-    }
+	}
 
-    @Override
-    public void serverToProxyResponseReceived() {
-    	if (verbose){
-    		System.out.println("serverToProxyResponseReceived");
-    	}
-    }
+	@Override
+	public void serverToProxyResponseReceived() {
+		if (verbose) {
+			System.out.println("serverToProxyResponseReceived");
+		}
+	}
 
 }
