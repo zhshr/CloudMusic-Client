@@ -1,82 +1,121 @@
 package us.acgn.cloudMusicProxy.Processor;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
-import com.google.common.primitives.Bytes;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.DefaultHttpContent;
-import io.netty.handler.codec.http.HttpContent;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpMessage;
 import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
+import us.acgn.cloudMusicProxy.Logger;
+import us.acgn.cloudMusicProxy.Logger.Level;
 
 public class Filter extends HttpFiltersAdapter {
 
 	Request req;
 	Response res;
-	boolean verbose = true;
+	boolean needBuffer = true;
 
 	public Filter(HttpRequest originalRequest) {
 		super(originalRequest);
 		// TODO Auto-generated constructor stub
-		req = new Request();
-		res = new Response();
-		if (originalRequest.getUri().contains(".mp3")) {
-			verbose = false;
+		req = new Request(originalRequest.getUri());
+		res = new Response(originalRequest.getUri());
+		if (!req.needProcess() && !res.needProcess()) {
+			// if it is not a Netease API, skip it and do not process
+			// Exception: mp3 from Netease, need to modify headers but here set
+			// to no
+			needBuffer = false;
 		}
 	}
 
 	@Override
-	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-		if (verbose) {
-			System.out.println("clientToProxyRequest - to -> " + originalRequest.getUri());
+	public void proxyToServerConnectionSucceeded(ChannelHandlerContext serverCtx) {
+		if (!needBuffer) {
+			Logger.log(Level.DEBUG, "Buffering is Disabled " + originalRequest.getUri());
+			ChannelPipeline pipeline = serverCtx.pipeline();
+			if (pipeline.get("inflater") != null) {
+				pipeline.remove("inflater");
+			}
+			if (pipeline.get("aggregator") != null) {
+				pipeline.remove("aggregator");
+			}
+			super.proxyToServerConnectionSucceeded(serverCtx);
 		}
-		return null;
 	}
 
-	@Override
-	public HttpObject serverToProxyResponse(HttpObject httpObject) {
-		if (verbose) {
-			System.out.println("serverToProxyResponse <- from - " + originalRequest.getUri() + "  "
-					+ httpObject.getClass().getName());
-		}
+	// @Override
+	// public HttpResponse clientToProxyRequest(HttpObject httpObject) {
+	// Logger.log(Level.VERBOSE, "clientToProxyRequest - to -> " +
+	// originalRequest.getUri());
+	// return null;
+	// }
 
-		return httpObject;
-	}
+	// int STPCount = 0;
+	//
+	// @Override
+	// public HttpObject serverToProxyResponse(HttpObject httpObject) {
+	// STPCount++;
+	// if (needBuffer || httpObject instanceof DefaultLastHttpContent) {
+	// Logger.log(Level.VERBOSE, "serverToProxyResponse[" + String.format("%5d",
+	// STPCount) + "] <- from - "
+	// + originalRequest.getUri() + " " + httpObject.getClass().getName());
+	// }
+	//
+	// return res.Process(httpObject);
+	// }
 
+	
+	
+	int PTCCount = 0;
+	long PTCsize = 0;
+	int PTCCode = 0;
+	String PTCPhrase = "";
 	@Override
 	public HttpObject proxyToClientResponse(HttpObject httpObject) {
-		if (verbose) {
-			System.out.println("proxyToClientResponse <- from - " + originalRequest.getUri() + "  "
-					+ httpObject.getClass().getName());
+		PTCCount++;
+		if (httpObject instanceof DefaultHttpResponse) {
+			PTCsize = HttpHeaders.getContentLength((HttpMessage) httpObject);
+			PTCCode = ((DefaultHttpResponse)httpObject).getStatus().code();
+			PTCPhrase = ((DefaultHttpResponse)httpObject).getStatus().reasonPhrase();
 		}
-		return httpObject;
+		if (needBuffer || httpObject instanceof DefaultLastHttpContent) {
+			if (!(httpObject instanceof DefaultLastHttpContent)){
+				FullHttpResponse resp = (FullHttpResponse) httpObject;
+				PTCsize = resp.content().capacity();
+				PTCCode =  resp.getStatus().code();
+				PTCPhrase = resp.getStatus().reasonPhrase();
+			}
+			Logger.log(Level.VERBOSE,
+					"proxyToClientResponse[" + String.format("%5d", PTCCount) + " parts " + PTCsize + "bytes] ["
+							+ PTCCode + " " + PTCPhrase + "]" + Logger.newLine
+							+ "\tFrom:\t" + originalRequest.getUri() + Logger.newLine + "\tClass: \t"
+							+ httpObject.getClass().getName());
+		}
+		return res.Process(httpObject);
 	}
 
-	@Override
-	public void serverToProxyResponseReceiving() {
-		if (verbose) {
-			System.out.println("serverToProxyResponseReceiving");
-		}
-	}
+	boolean firstSTPPrinted = false;
 
-	@Override
-	public void serverToProxyResponseReceived() {
-		if (verbose) {
-			System.out.println("serverToProxyResponseReceived");
-		}
-	}
+	// @Override
+	// public void serverToProxyResponseReceiving() {
+	// if (needBuffer || !firstSTPPrinted) {
+	// Logger.log(Level.VERBOSE, "serverToProxyResponseReceiving");
+	// firstSTPPrinted = true;
+	// }
+	// }
+	//
+	// @Override
+	// public void serverToProxyResponseReceived() {
+	// if (needBuffer || !firstSTPPrinted) {
+	// Logger.log(Level.VERBOSE, "serverToProxyResponseReceived");
+	// }
+	// }
 
 }

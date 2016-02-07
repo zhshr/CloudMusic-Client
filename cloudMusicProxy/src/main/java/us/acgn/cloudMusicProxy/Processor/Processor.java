@@ -3,7 +3,11 @@ package us.acgn.cloudMusicProxy.Processor;
 import io.netty.handler.codec.http.HttpObject;
 
 public abstract class Processor {
-	abstract public boolean needProcess(String uri);
+	protected String uri;
+	public Processor(String uri){
+		this.uri = uri;
+	}
+	abstract public boolean needProcess();
 
 	abstract public HttpObject Process(HttpObject obj);
 }

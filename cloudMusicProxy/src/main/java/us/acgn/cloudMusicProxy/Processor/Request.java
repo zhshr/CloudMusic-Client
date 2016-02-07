@@ -3,12 +3,13 @@ package us.acgn.cloudMusicProxy.Processor;
 import io.netty.handler.codec.http.HttpObject;
 
 public class Request extends Processor {
-
+	public Request(String uri){
+		super(uri);
+	}
 	@Override
-	public boolean needProcess(String uri) {
+	public boolean needProcess() {
 		// TODO Auto-generated method stub
-		System.out.print("Request Processor: " + uri + " ");
-		return true;
+		return false;
 	}
 
 	@Override

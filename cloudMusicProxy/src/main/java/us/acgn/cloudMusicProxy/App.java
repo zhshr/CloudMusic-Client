@@ -7,6 +7,7 @@ import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpRequest;
+import us.acgn.cloudMusicProxy.Logger.Level;
 import us.acgn.cloudMusicProxy.Processor.Filter;
 
 /**
@@ -16,19 +17,19 @@ import us.acgn.cloudMusicProxy.Processor.Filter;
 public class App {
 
 	public static void main(String[] args) {
+		Logger.setLevel(Level.VERBOSE);
+		
 		System.out.println("Hello World!");
-		HttpProxyServer server = DefaultHttpProxyServer.bootstrap().withPort(9001)
+		HttpProxyServer server = DefaultHttpProxyServer.bootstrap().withPort(9001).withConnectTimeout(5000)
 				.withFiltersSource(new HttpFiltersSourceAdapter() {
+					boolean isBuffer = true;
 					public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext ctx) {
-						System.out.println("Filter Request: " + originalRequest.getUri());
+						Logger.log(Level.DEBUG,"Filter Request: " + originalRequest.getUri());
 						Filter filter = new Filter(originalRequest);
 						return filter;
 					}
 
-					// @Override
-					// public int getMaximumRequestBufferSizeInBytes() {
-					// return 102400;
-					// }
+
 					@Override
 					public int getMaximumResponseBufferSizeInBytes() {
 						return 1024*1024*10;
