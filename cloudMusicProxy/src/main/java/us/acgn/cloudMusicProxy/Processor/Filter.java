@@ -81,9 +81,14 @@ public class Filter extends HttpFiltersAdapter {
 	public HttpObject proxyToClientResponse(HttpObject httpObject) {
 		PTCCount++;
 		if (httpObject instanceof DefaultHttpResponse) {
-			PTCsize = HttpHeaders.getContentLength((HttpMessage) httpObject);
-			PTCCode = ((DefaultHttpResponse)httpObject).getStatus().code();
-			PTCPhrase = ((DefaultHttpResponse)httpObject).getStatus().reasonPhrase();
+			try{
+				PTCsize = HttpHeaders.getContentLength((HttpMessage) httpObject);
+				PTCCode = ((DefaultHttpResponse)httpObject).getStatus().code();
+				PTCPhrase = ((DefaultHttpResponse)httpObject).getStatus().reasonPhrase();
+			}catch(Exception e){
+				Logger.log(Level.VERBOSE, "Content-Length retrival failed");
+			}
+			
 		}
 		if (needBuffer || httpObject instanceof DefaultLastHttpContent) {
 			if (!(httpObject instanceof DefaultLastHttpContent)){

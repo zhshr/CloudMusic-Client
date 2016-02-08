@@ -27,8 +27,6 @@ public class Response extends Processor {
 		return false;
 	}
 
-	public final String PCSearchURL = "http://music.163.com/eapi/batch";
-
 	@Override
 	public HttpObject Process(HttpObject obj) {
 		// TODO Auto-generated method stub
@@ -44,22 +42,25 @@ public class Response extends Processor {
 			try {
 				json = (JSONObject) parser.parse(str);
 				internalProcess(uri, json);
-				if (uri.contains(PCSearchURL)) {
-					modifyPCSearchURL(json);
-				}
 				str = json.toJSONString();
 				byte[] buf = str.getBytes(Charset.forName("UTF-8"));
-				Logger.log(Level.VERBOSE, "Buffer Capacity   String length   Buffer New Length" + Logger.newLine
-						//15+24(padding)
-						+ String.format("%15s%16s%20s", buffer.capacity(), str.length(), buf.length));
+				Logger.log(
+						Level.VERBOSE,
+						"Buffer Capacity   String length   Buffer New Length"
+								+ Logger.newLine
+								// 15+24(padding)
+								+ String.format("%15s%16s%20s",
+										buffer.capacity(), str.length(),
+										buf.length));
 				buffer.clear();
 				buffer.capacity(buf.length);
 				buffer.writeBytes(buf);
-				((FullHttpResponse) obj).headers().set("Content-Length", buf.length);
+				((FullHttpResponse) obj).headers().set("Content-Length",
+						buf.length);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				Logger.log(Level.VERBOSE, str);
-				if (Logger.isPrint(Level.DEBUG)){
+				if (Logger.isPrint(Level.DEBUG)) {
 					e.printStackTrace();
 				}
 			}
@@ -70,14 +71,35 @@ public class Response extends Processor {
 		return obj;
 	}
 
+	public final String PCSearchURL = "http://music.163.com/eapi/batch";
+
 	private void internalProcess(String uri, JSONObject json) {
 		// TODO Auto-generated method stub
-		
+		if (uri.contains(PCSearchURL)) {
+			modifyPCSearchURL(json);
+		} else if (true) {
+
+		}
+
 	}
 
 	private void modifyPCSearchURL(JSONObject json) {
 		// TODO Auto-generated method stub
-
+		try{
+			Logger.log(Level.DEBUG, "Desktop Search URL code: " + json.get("code").toString());
+			JSONObject result = (JSONObject) ((JSONObject) json.get("/api/cloudsearch/pc")).get("result");
+			JSONObject songs = (JSONObject) result.get("songs");
+			long songCount = Integer.parseInt(result.get("songCount").toString());
+			Logger.log(Level.DEBUG, "\tSong count: " + songCount);
+			for (Object obj : songs.values().toArray()){
+				JSONObject song = (JSONObject)obj;
+				Logger.log(Level.VERBOSE, "\t" + String.format("%20s%", arg1));
+			}
+		}catch(Exception e){
+			Logger.log(Level.WARNING, "JSON wrong. Full Text:" + Logger.newLine + json.toJSONString());
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void modifyHeader(HttpObject obj) {
