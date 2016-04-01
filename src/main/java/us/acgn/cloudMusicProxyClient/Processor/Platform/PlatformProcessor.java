@@ -1,8 +1,8 @@
-package us.acgn.cloudMusicProxy.Processor.Platform;
+package us.acgn.cloudMusicProxyClient.Processor.Platform;
 
 import org.json.simple.JSONObject;
 
-import us.acgn.cloudMusicProxy.Processor.Response;
+import us.acgn.cloudMusicProxyClient.Processor.Response;
 
 public abstract class PlatformProcessor {
 	public abstract void init(Response response);

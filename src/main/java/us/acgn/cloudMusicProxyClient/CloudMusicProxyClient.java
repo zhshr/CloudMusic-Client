@@ -1,4 +1,4 @@
-package us.acgn.cloudMusicProxy;
+package us.acgn.cloudMusicProxyClient;
 
 import java.io.IOException;
 
@@ -10,14 +10,14 @@ import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpRequest;
-import us.acgn.cloudMusicProxy.Logger.Level;
-import us.acgn.cloudMusicProxy.Processor.Filter;
+import us.acgn.cloudMusicProxyClient.Logger.Level;
+import us.acgn.cloudMusicProxyClient.Processor.Filter;
 
 /**
  * Hello world!
  *
  */
-public class App {
+public class CloudMusicProxyClient {
 	public static void main(String[] args) throws ClientProtocolException, IOException {
 		Logger.setLevel(Level.VERBOSE);
 //		Logger.log(Level.VERBOSE, NeteaseAPI.getURL("3397490930293189", true, ".mp3"));

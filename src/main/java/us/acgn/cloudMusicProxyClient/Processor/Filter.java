@@ -1,4 +1,4 @@
-package us.acgn.cloudMusicProxy.Processor;
+package us.acgn.cloudMusicProxyClient.Processor;
 
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
@@ -16,8 +16,8 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.LastHttpContent;
-import us.acgn.cloudMusicProxy.Logger;
-import us.acgn.cloudMusicProxy.Logger.Level;
+import us.acgn.cloudMusicProxyClient.Logger;
+import us.acgn.cloudMusicProxyClient.Logger.Level;
 
 public class Filter extends HttpFiltersAdapter {
 

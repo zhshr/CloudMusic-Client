@@ -1,4 +1,4 @@
-package us.acgn.cloudMusicProxy.Processor;
+package us.acgn.cloudMusicProxyClient.Processor;
 
 import io.netty.handler.codec.http.HttpObject;
 

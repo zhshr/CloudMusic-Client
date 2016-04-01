@@ -1,6 +1,7 @@
 package us.acgn.cloudMusicProxy.Processor;
 
 import junit.framework.TestCase;
+import us.acgn.cloudMusicProxyClient.Processor.Response;
 
 public class ResponseTest extends TestCase {
 	private Response res = null;

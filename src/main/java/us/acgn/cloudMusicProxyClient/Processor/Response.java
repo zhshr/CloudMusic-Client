@@ -1,4 +1,4 @@
-package us.acgn.cloudMusicProxy.Processor;
+package us.acgn.cloudMusicProxyClient.Processor;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -16,10 +16,10 @@ import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpResponse;
-import us.acgn.cloudMusicProxy.Logger;
-import us.acgn.cloudMusicProxy.Logger.Level;
-import us.acgn.cloudMusicProxy.Processor.Platform.PCProcessor;
-import us.acgn.cloudMusicProxy.Utils.JSONAccesser;
+import us.acgn.cloudMusicProxyClient.Logger;
+import us.acgn.cloudMusicProxyClient.Logger.Level;
+import us.acgn.cloudMusicProxyClient.Processor.Platform.PCProcessor;
+import us.acgn.cloudMusicProxyClient.Utils.JSONAccesser;
 
 public class Response extends Processor {
 	public interface ProcessingFunction {

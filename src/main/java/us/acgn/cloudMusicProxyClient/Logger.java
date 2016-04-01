@@ -1,4 +1,4 @@
-package us.acgn.cloudMusicProxy;
+package us.acgn.cloudMusicProxyClient;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

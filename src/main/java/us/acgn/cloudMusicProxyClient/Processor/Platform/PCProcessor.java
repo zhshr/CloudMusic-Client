@@ -1,14 +1,14 @@
-package us.acgn.cloudMusicProxy.Processor.Platform;
+package us.acgn.cloudMusicProxyClient.Processor.Platform;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import us.acgn.cloudMusicProxy.Logger;
-import us.acgn.cloudMusicProxy.Logger.Level;
-import us.acgn.cloudMusicProxy.Processor.Response;
-import us.acgn.cloudMusicProxy.Utils.JSONAccesser;
-import us.acgn.cloudMusicProxy.Utils.NeteaseAPI.Quality;
-import us.acgn.cloudMusicProxy.Utils.RemoteServer;
+import us.acgn.cloudMusicProxyClient.Logger;
+import us.acgn.cloudMusicProxyClient.Logger.Level;
+import us.acgn.cloudMusicProxyClient.Processor.Response;
+import us.acgn.cloudMusicProxyClient.Utils.JSONAccesser;
+import us.acgn.cloudMusicProxyClient.Utils.RemoteServer;
+import us.acgn.cloudMusicProxyClient.Utils.NeteaseAPI.Quality;
 
 public class PCProcessor extends PlatformProcessor{
 	@Override

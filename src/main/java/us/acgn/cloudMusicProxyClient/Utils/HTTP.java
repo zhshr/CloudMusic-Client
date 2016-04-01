@@ -1,4 +1,4 @@
-package us.acgn.cloudMusicProxy.Utils;
+package us.acgn.cloudMusicProxyClient.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
