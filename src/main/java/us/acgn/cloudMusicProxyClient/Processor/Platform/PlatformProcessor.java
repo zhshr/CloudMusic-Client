@@ -8,4 +8,5 @@ public abstract class PlatformProcessor {
 	public abstract void init(Response response);
 	public abstract void searchAPI(JSONObject json);
 	public abstract void playAPI(JSONObject json);
+	public abstract void playlistAPI(JSONObject json);
 }

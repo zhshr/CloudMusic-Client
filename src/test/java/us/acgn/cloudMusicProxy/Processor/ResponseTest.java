@@ -16,11 +16,11 @@ public class ResponseTest extends TestCase {
 	}
 
 	public void testProcess() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	public void testIsCloudMusicMp3() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }

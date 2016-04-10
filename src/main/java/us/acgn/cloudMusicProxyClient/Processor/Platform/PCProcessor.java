@@ -13,14 +13,14 @@ import us.acgn.cloudMusicProxyClient.Utils.NeteaseAPI.Quality;
 public class PCProcessor extends PlatformProcessor{
 	@Override
 	public void init(Response response) {
-		// TODO Auto-generated method stub
 		response.bind(PCSearchURL, (json) -> searchAPI(json));
 		response.bind(PCPlayURL, (json) -> playAPI(json));
+		response.bind(PCPlaylistURL, (json) -> playlistAPI(json));
+		response.bind(PCPlaylistURL2, (json) -> playlistAPI(json));
 		quality = Quality.AsHigh;
 	}
 	public Quality quality;
 	public final String PCSearchURL = "http://music.163.com/eapi/batch";
-	public final String PCPlayURL = "http://music.163.com/eapi/song/enhance/player/url";
 	@Override
 	public void searchAPI(JSONObject json) {
 		try {
@@ -42,7 +42,7 @@ public class PCProcessor extends PlatformProcessor{
 				Logger.log(Level.VERBOSE, "\t" + String.format("%-50s%-40s%-30s", name, artist, album));
 				if (song.get("privilege").get("st").parseLong() != 0) {
 					Logger.log(Level.VERBOSE, "\t\tUnavailable song");
-					modifyOneSong(song);
+					modifyPrivilege(song.get("privilege"));
 				}
 			}
 		} catch (Exception e) {
@@ -50,20 +50,21 @@ public class PCProcessor extends PlatformProcessor{
 			e.printStackTrace();
 		}
 	}
-	private void modifyOneSong(JSONAccesser song){
-		JSONAccesser pri = song.get("privilege");
+	private void modifyPrivilege(JSONAccesser pri){
+		long maxbr = pri.get("maxbr").parseLong();
 		pri.replace("st", 0);
 		pri.replace("subp", 1);
 		pri.replace("sp", 7);
 		pri.replace("cp", 1);
-		pri.replace("fl", 320000);
-		pri.replace("dl", 320000);
-		pri.replace("pl", 320000);
-		song.replace("st", 0);
+		pri.replace("fl", maxbr);
+		pri.replace("dl", maxbr);
+		pri.replace("pl", maxbr);
+		//song.replace("st", 0);
 	}
+
+	public final String PCPlayURL = "http://music.163.com/eapi/song/enhance/player/url";
 	@Override
 	public void playAPI(JSONObject json) {
-		// TODO Auto-generated method stub
 		try {
 			Logger.log(Level.DEBUG, "Desktop Play URL code: " + json.get("code").toString());
 			JSONAccesser song = new JSONAccesser(json).get("data").get(0);
@@ -80,6 +81,17 @@ public class PCProcessor extends PlatformProcessor{
 		} catch (Exception e) {
 			Logger.log(Level.WARNING, "JSON wrong. Full Text:" + Logger.newLine + json.toJSONString());
 			e.printStackTrace();
+		}
+	}
+	public final String PCPlaylistURL = "http://music.163.com/eapi/v3/song/detail/";
+	public final String PCPlaylistURL2 = "http://music.163.com/eapi/v3/playlist/detail";
+	@Override
+	public void playlistAPI(JSONObject json) {
+		Logger.log(Level.INFO, "Desktop Playlist URL code: " + json.get("code").toString());
+		JSONAccesser pris = new JSONAccesser(json).get("privileges");
+		for (Object temp : pris.parseJSONArray()){
+			JSONAccesser pri = new JSONAccesser((JSONObject)temp);
+			modifyPrivilege(pri);
 		}
 	}
 }

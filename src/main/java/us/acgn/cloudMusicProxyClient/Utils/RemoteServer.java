@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RemoteServer {
-	private static String ip = "127.0.0.1";
+	private static String ip = "cms.acgn.us";
 	private static int port = 1111;
 	private static String encodedfsIDs(String[] songIDs) {
 		String result = "";
